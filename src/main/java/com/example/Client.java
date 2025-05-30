@@ -24,3 +24,6 @@ public class Client {
         return this.jobs.get(job);
     }
 }
+
+// TODO: adjust data type of jobs for easy access by object reference
+// TODO: update tests for quick changes
