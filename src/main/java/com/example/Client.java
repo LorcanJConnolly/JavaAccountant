@@ -20,6 +20,8 @@ public class Client {
         return this.jobs;
     }
 
+    public void newJob(){}
+
     public AccountsManager getJob(AccountsManager job){
         for (AccountsManager job_manager : this.jobs){
             if (job == job_manager){return job_manager;}
