@@ -64,17 +64,17 @@ public class AccountsManager {
     }
 
     public void addAccount(Account account){
-        if (this.accounts.containsKey(account.key)) {
+        if (this.accounts.containsKey(account.getId())) {
             throw new IllegalArgumentException("Account already exists in AccountsManager.");
         }
-        this.accounts.put(account.id, account);
+        this.accounts.put(account.getId(), account);
     }
 
     public void deleteAccount(Account account){
-        if (!this.accounts.containsKey(account.key)) {
+        if (!this.accounts.containsKey(account.getId())) {
             throw new IllegalArgumentException("Account does not exist in AccountsManager.");
         }
-        this.accounts.remove(account.id, account);
+        this.accounts.remove(account.getId(), account);
     }
 
     public void adjustAccount(){}
