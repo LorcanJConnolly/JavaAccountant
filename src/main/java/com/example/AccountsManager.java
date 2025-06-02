@@ -13,7 +13,7 @@ public class AccountsManager {
     private String description;
     private HashMap<UUID, Account> accounts;
 
-    public AccountsManager(Period period_length, LocalDate period_start, String description){
+    public AccountsManager(LocalDate period_start, Period period_length, String description){
         this.id = UUID.randomUUID(); // generate a UUID for the Object
         this.period_length = period_length;
         this.period_start = period_start;
