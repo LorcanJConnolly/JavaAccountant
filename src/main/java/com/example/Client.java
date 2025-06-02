@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 public class Client {
-    public HashSet<AccountsManager> jobs;
+    private final HashSet<AccountsManager> jobs;
     public final String name;
 
     public Client(String name){
@@ -16,11 +16,16 @@ public class Client {
         this.jobs = jobs;
     }
 
+    public void newJob(AccountsManager job){
+        if (this.jobs.contains(job)){
+            throw new IllegalArgumentException("Job already exists in Client. Change attribute(s) of Job.");
+        }
+        this.jobs.add(job);
+    }
+
     public HashSet<AccountsManager> getJobs(){
         return this.jobs;
     }
-
-    public void newJob(){}
 
     public AccountsManager getJob(AccountsManager job){
         for (AccountsManager job_manager : this.jobs){
