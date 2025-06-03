@@ -18,6 +18,7 @@ public class AccountsManager {
         this.id = UUID.randomUUID(); // generate a UUID for the Object
         this.period_length = period_length;
         this.period_start = period_start;
+        // TODO currency and reorder
         this.description = description;
         this.initialisation_date = LocalDate.now();
         this.accounts = new HashMap<>();
@@ -42,6 +43,8 @@ public class AccountsManager {
                 this.getPeriodStart() == accounts_manager.getPeriodStart() &&
                 Objects.equals(this.getDescription(), accounts_manager.getDescription());
     }
+
+    // TODO: hashcode override
 
     public UUID getId(){
         return this.id;
@@ -76,17 +79,17 @@ public class AccountsManager {
     }
 
     public void addAccount(Account account){
-        if (this.accounts.containsKey(account.getId())) {
+        if (this.accounts.containsKey(account.getAccountId())) {
             throw new IllegalArgumentException("Account already exists in AccountsManager.");
         }
-        this.accounts.put(account.getId(), account);
+        this.accounts.put(account.getAccountId(), account);
     }
 
     public void deleteAccount(Account account){
-        if (!this.accounts.containsKey(account.getId())) {
+        if (!this.accounts.containsKey(account.getAccountId())) {
             throw new IllegalArgumentException("Account does not exist in AccountsManager.");
         }
-        this.accounts.remove(account.getId(), account);
+        this.accounts.remove(account.getAccountId(), account);
     }
 
     public void adjustAccount(){}
