@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.UUID;
 
 import junit.framework.TestCase;
-import junit.framework.Test;
 
 public class ClientTest extends TestCase {
     public void testInitialisation1(){
@@ -37,6 +36,7 @@ public class ClientTest extends TestCase {
         // FIXME
         Client client = new Client("test_client");
         AccountsManager job1 = new AccountsManager(LocalDate.now(), "Test Job 1");
+        client.newJob(job1);
         // Junit 3.8.1 version of assertThrows
         try {
             client.newJob(job1);
@@ -59,7 +59,6 @@ public class ClientTest extends TestCase {
     }
 
     public void testDeleteJob(){
-        // TODO: add equals to AccountManager
         // TODO: possibly change "job" to AccountManager in some places
         HashSet<AccountsManager> jobs = new HashSet<>();
         AccountsManager job1 = new AccountsManager(LocalDate.now(), Period.ofMonths(6), "Test Job 1");

@@ -36,7 +36,10 @@ public class Client {
 
     public void deleteJob(AccountsManager job){
         for (AccountsManager job_manager : this.jobs){
-            if (job == job_manager){this.jobs.remove(job);}
+            if (job == job_manager){
+                this.jobs.remove(job);
+                return;
+            }
         }
         throw new NoSuchElementException("Did not find job to delete.");
     }

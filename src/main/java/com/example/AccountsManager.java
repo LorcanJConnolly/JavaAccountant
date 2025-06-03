@@ -3,6 +3,7 @@ package com.example;
 import java.time.Period;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class AccountsManager {
@@ -11,7 +12,7 @@ public class AccountsManager {
     private LocalDate period_start;
     private final LocalDate initialisation_date;
     private String description;
-    private HashMap<UUID, Account> accounts;
+    private final HashMap<UUID, Account> accounts;
 
     public AccountsManager(LocalDate period_start, Period period_length, String description){
         this.id = UUID.randomUUID(); // generate a UUID for the Object
@@ -29,6 +30,17 @@ public class AccountsManager {
         this.description = description;
         this.initialisation_date = LocalDate.now();
         this.accounts = new HashMap<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AccountsManager)) return false;
+        AccountsManager accounts_manager = (AccountsManager) o;
+        return this.getId() == accounts_manager.getId() &&
+                this.getPeriodLength() == accounts_manager.getPeriodLength() &&
+                this.getPeriodStart() == accounts_manager.getPeriodStart() &&
+                Objects.equals(this.getDescription(), accounts_manager.getDescription());
     }
 
     public UUID getId(){
