@@ -1,4 +1,6 @@
 package com.example;
 
-public class AdjustmentTest {
+import junit.framework.TestCase;
+
+public class AdjustmentTest extends TestCase {
 }
