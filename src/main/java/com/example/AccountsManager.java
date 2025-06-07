@@ -7,15 +7,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AccountsManager {
-    private final UUID id;
+    private final UUID accountsManagerId;
+    private String description;
     private Period period_length;
     private LocalDate period_start;
-    private final LocalDate initialisation_date;
-    private String description;
     private final HashMap<UUID, Account> accounts;
+    private final LocalDate initialisation_date;
 
     public AccountsManager(LocalDate period_start, Period period_length, String description){
-        this.id = UUID.randomUUID(); // generate a UUID for the Object
+        this.accountsManagerId = UUID.randomUUID(); // generate a UUID for the Object
         this.period_length = period_length;
         this.period_start = period_start;
         // TODO currency and reorder
@@ -25,7 +25,7 @@ public class AccountsManager {
     }
 
     public AccountsManager(LocalDate period_start, String description){
-        this.id = UUID.randomUUID(); // generate a UUID for the Object
+        this.accountsManagerId = UUID.randomUUID(); // generate a UUID for the Object
         this.period_length = Period.ofMonths(12);
         this.period_start = period_start;
         this.description = description;
@@ -47,7 +47,7 @@ public class AccountsManager {
     // TODO: hashcode override
 
     public UUID getId(){
-        return this.id;
+        return this.accountsManagerId;
     }
 
     public Period getPeriodLength() {
