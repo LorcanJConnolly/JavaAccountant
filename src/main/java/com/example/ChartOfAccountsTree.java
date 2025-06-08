@@ -92,14 +92,13 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
             }
         }
 
+        /**
+         *  The Chart of Accounts is represented by a Tree.
+         *  Each branch represents an account category, and each node of this branch represents further detail of this category.
+         *  The branches and nodes represent a hierarchical relationship.
+         *  When we delete a node, we will be deleting the entire branch from the Chart of Accounts.
+         */
         public void deleteNodeAndBranch(){
-            /**
-             *  The Chart of Accounts is represented by a Tree.
-             *  Each branch represents an account category, and each node of this branch represents further detail of this category.
-             *  The branches and nodes represent a hierarchical relationship.
-             *  When we delete a node, we will be deleting the entire branch from the Chart of Accounts.
-             */
-
             if (!this.children.isEmpty()){
                 List<Node> childrenCopy = new ArrayList<>(this.children);
                 for (Node child : childrenCopy){
