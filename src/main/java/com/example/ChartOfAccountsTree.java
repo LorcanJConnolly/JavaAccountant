@@ -8,6 +8,9 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
     private String description;
     private final Node root;
     private final HashSet<Node> nodes;
+    private static final Set<String> ALLOWED_ROOT_VALUES = Set.of(
+            "assets", "liabilities", "equity", "revenue", "expenses"
+    );
 
     public class Node implements Iterable<Node> {
         private String category;
@@ -57,6 +60,7 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
 
         public void editNode(String category, String COA_code){
             if (this == ChartOfAccountsTree.this.getRoot() ){
+
                 throw new UnsupportedOperationException("Can't edit root node.");
             }
             Node node_shallow_copy = new Node(category, COA_code);
@@ -73,6 +77,10 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
             if (helperCheckExists(child)) {
                 throw new IllegalArgumentException("The value '" + child + "' already exists in the chart of accounts.");
             }
+            if (child == null){
+                // For warnings.
+                throw new IllegalArgumentException("Node cannot be null.");
+            }
             this.children.add(child);
             child.parent = this;
             ChartOfAccountsTree.this.nodes.add(child);
@@ -84,7 +92,7 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
             }
         }
 
-        public void deleteNodeAndBranch(Node node){
+        public void deleteNodeAndBranch(){
             /**
              *  The Chart of Accounts is represented by a Tree.
              *  Each branch represents an account category, and each node of this branch represents further detail of this category.
@@ -92,30 +100,18 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
              *  When we delete a node, we will be deleting the entire branch from the Chart of Accounts.
              */
 
-
-            // TODO
-            List<Node> nodesToDelete = new ArrayList<>();
-            Iterator<Node> iterator = node.iterator();
-
-            while (iterator.hasNext()){
-                nodesToDelete.add(iterator.next());
+            if (!this.children.isEmpty()){
+                List<Node> childrenCopy = new ArrayList<>(this.children);
+                for (Node child : childrenCopy){
+                    child.deleteNodeAndBranch();
+                }
             }
-
-            for (Node node_to_delete: nodesToDelete){
-
+            if (this.parent != null){
+                Node parent = this.parent;
+                parent.children.remove(this);
             }
-
-            if (!helperCheckExists(node)) {
-                throw new IllegalArgumentException("Node: '" + node + "' does not exist in COA.");
-            }
-            if (node != ChartOfAccountsTree.this.getRoot()) {
-                Node parent = node.parent;
-                parent.children.remove(node);
-            }
-
-            if (!node.children.isEmpty()){
-
-            }
+            this.parent = null;
+            ChartOfAccountsTree.this.nodes.remove(this);
         }
 
         @Override
@@ -174,9 +170,8 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
     }
 
     public ChartOfAccountsTree(String root_value, String root_COA_code){
-        String[] allowed_root_values = {"assets", "liabilities", "equity", "revenue", "expenses"};
-        if (!Arrays.asList(allowed_root_values).contains(root_value)){
-            throw new IllegalArgumentException("Invalid root value: " + root_value + ". Root value must be one of the following: " + Arrays.toString(allowed_root_values));
+        if (ALLOWED_ROOT_VALUES.contains(root_value)){
+            throw new IllegalArgumentException("Invalid root value: " + root_value + ". Root value must be one of the following: " + ALLOWED_ROOT_VALUES);
         }
         this.ChartOfAccountsId = UUID.randomUUID();
         this.root = new Node(root_value, root_COA_code);
@@ -200,6 +195,10 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
 
     public Node getRoot(){
         return this.root;
+    }
+
+    public Set<String> getAllowedRootValues(){
+        return ALLOWED_ROOT_VALUES;
     }
 
     public HashSet<Node> showNodes(){
