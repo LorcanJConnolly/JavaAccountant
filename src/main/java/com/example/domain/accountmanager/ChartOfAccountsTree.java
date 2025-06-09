@@ -1,4 +1,4 @@
-package com.example;
+package com.example.domain.accountmanager;
 
 import java.io.File;
 import java.util.*;
@@ -74,12 +74,12 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         }
 
         public void addChild(Node child){
-            if (helperCheckExists(child)) {
-                throw new IllegalArgumentException("The value '" + child + "' already exists in the chart of accounts.");
-            }
             if (child == null){
                 // For warnings.
                 throw new IllegalArgumentException("Node cannot be null.");
+            }
+            if (helperCheckExists(child)) {
+                throw new IllegalArgumentException("The value '" + child + "' already exists in the chart of accounts.");
             }
             this.children.add(child);
             child.parent = this;

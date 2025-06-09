@@ -1,4 +1,7 @@
-package com.example;
+package com.example.domain.accountmanager;
+
+import com.example.domain.journal.Adjustment;
+import com.example.domain.journal.Journal;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -8,7 +11,7 @@ public class Account {
     private final ArrayList<String> descriptors;
     private final double initialValue;
     private String category;
-    private HashMap<LocalDateTime, ArrayList<Journal>> history;
+    private HashMap<LocalDateTime, HashMap<Integer, ArrayList<Journal>>> history;
     private ChartOfAccountsTree.Node COA_Index;
 
     public Account(ArrayList<String> descriptors, double initialValue, ChartOfAccountsTree.Node COA_Index){
@@ -33,7 +36,13 @@ public class Account {
         return this.accountId;
     }
 
-    public void applyJournal(){}
+    public void applyAdjustment(LocalDateTime date, Adjustment adjustment){
+        int current_value = this.getValueAt(LocalDateTime.now());
+        HashMap<int, Adjustment>
+        history.put(date)
+    }
 
-    public void getValueAt(){}
+    public int getValueAt(LocalDateTime date){}
+
+    public ArrayList<Journal> getJournalsAt(LocalDateTime date){}
 }

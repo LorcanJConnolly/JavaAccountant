@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.domain.accountmanager.ChartOfAccountsTree;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -124,6 +125,7 @@ public class ChartOfAccountsTest {
 
         ChartOfAccountsTree.Node node1 = COA.new Node("value1", "1000");
         ChartOfAccountsTree.Node node2 = COA.new Node("value2", "2000");
+        assertNotNull(root_node); // for warning
         root_node.addChild(node1);
         root_node.addChild(node2);
 
@@ -190,7 +192,10 @@ public class ChartOfAccountsTest {
         // Delete from root
         root.deleteNodeAndBranch();
         assertTrue(COA.showNodes().isEmpty());
-        assertTrue(COA.getRoot() == null);
+        assertNull(COA.getRoot().getCategory(), "Expected root attributes to be null");
+        assertNull(COA.getRoot().getCOACode(), "Expected root attributes to be null");
+        assertNull(COA.getRoot().getCOACode(), "Expected root attributes to be null");
+        assertNull(COA.getRoot().getChildren(), "Expected root attributes to be null");
     }
 }
 

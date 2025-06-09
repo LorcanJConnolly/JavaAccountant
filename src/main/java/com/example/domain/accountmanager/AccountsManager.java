@@ -1,4 +1,4 @@
-package com.example;
+package com.example.domain.accountmanager;
 
 import java.time.Period;
 import java.time.LocalDate;
