@@ -1,3 +1,4 @@
 package com.example.domain.model.repositories;
 
-interface ClientRepository
+public interface ClientRepository {
+}
