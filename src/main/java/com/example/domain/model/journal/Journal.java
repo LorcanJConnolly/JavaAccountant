@@ -1,4 +1,4 @@
-package com.example.domain.journal;
+package com.example.domain.model.journal;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

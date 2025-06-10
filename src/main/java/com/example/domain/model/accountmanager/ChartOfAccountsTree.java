@@ -1,4 +1,4 @@
-package com.example.domain.accountmanager;
+package com.example.domain.model.accountmanager;
 
 import java.io.File;
 import java.util.*;

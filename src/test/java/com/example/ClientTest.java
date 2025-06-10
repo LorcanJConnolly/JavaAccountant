@@ -1,14 +1,12 @@
 package com.example;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.example.domain.accountmanager.AccountsManager;
-import com.example.domain.client.Client;
+import com.example.domain.model.accountmanager.AccountsManager;
+import com.example.domain.model.client.Client;
 
 public class ClientTest {
 

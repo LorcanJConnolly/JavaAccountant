@@ -1,4 +1,4 @@
-package com.example.domain.client;
+package com.example.domain.model.client;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;

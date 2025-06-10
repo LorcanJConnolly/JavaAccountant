@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.domain.accountmanager.ChartOfAccountsTree;
+import com.example.domain.model.accountmanager.ChartOfAccountsTree;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

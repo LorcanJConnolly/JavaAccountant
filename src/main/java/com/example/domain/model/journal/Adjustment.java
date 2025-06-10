@@ -1,4 +1,4 @@
-package com.example.domain.journal;
+package com.example.domain.model.journal;
 
 public class Adjustment {
     private final String description;
