@@ -204,6 +204,15 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         return new HashSet<>(this.nodes);
     }
 
+    public Node findNodeByCategory(String category){
+        for (Node node: this.showNodes()){
+            if (node.category.equals(category)){
+                return node;
+            }
+        }
+        return null;
+    }
+
     @Override
     public Iterator<Node> iterator() {
         return root.iterator();

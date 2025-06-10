@@ -10,9 +10,9 @@ public class AccountHistory {
     // TODO: fix type
     private final HashMap<LocalDateTime, HashMap<Integer, ArrayList<Journal>>> tree;
 
-    public AccountHistory(LocalDateTime accountInitialisation, double initialValue){
+
+    public AccountHistory(){
         this.tree = new HashMap<>();
-        storeEvent(accountInitialisation, initialValue, null);
     }
 
     public void storeEvent(LocalDateTime date, double valueAtDate, Journal journal){

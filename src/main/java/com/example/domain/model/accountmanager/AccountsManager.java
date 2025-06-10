@@ -83,29 +83,26 @@ public class AccountsManager {
         this.chartOfAccounts = newChartOfAccounts;
     }
 
-    public void addAccount(UUID accountId){
-        Account account = findAccountById(accountId);
-
-        if (account != null){
+    public void addAccount(Account account){
+        if (findAccountById(account.getAccountId()) != null){
             throw new IllegalArgumentException("Account already exists in AccountsManager.");
         }
 
-        if (!this.chartOfAccounts.showNodes().contains(Account.getChartOfAccountsIndex())){
+        if (this.chartOfAccounts.findNodeByCategory(account.getChartOfAccountsNodeCategory()) == null){
             throw new IllegalArgumentException("Account has no index in chart of accounts.");
         }
 
-        this.accounts.put(accountId, account);
+        this.accounts.put(account.getAccountId(), account);
     }
 
-    public void deleteAccount(UUID accountId){
-        Account account = findAccountById(accountId);
+    public void deleteAccount(Account account){
+        Account foundAccount = findAccountById(account.getAccountId());
 
-        if (account == null) {
-            throw new NoSuchElementException("Cannot find account with id '" + accountId + "'.");
+        if (foundAccount == null) {
+            throw new NoSuchElementException("Account does not exist in AccountManager.");
         }
 
-        // TODO: check this is correct annotation
-        this.accounts.remove(accountId, account);
+        this.accounts.remove(account.getAccountId(), account);
     }
     public Account findAccountById(UUID accountId){
         return this.accounts.get(accountId);
