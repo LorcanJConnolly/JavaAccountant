@@ -10,7 +10,7 @@ public class Journal {
     private final UUID journalID;
     private final String description;
     private final ArrayList<Adjustment> adjustments;
-    private int total;
+    private double total;
     private final LocalDateTime date;
 
     public class Adjustment {
@@ -29,6 +29,7 @@ public class Journal {
         public int getValue(){
             return this.value;
         }
+
         @Override
         public String toString(){
             return "Adjustment(" + this.description + ", " + this.value + ")";
@@ -49,11 +50,20 @@ public class Journal {
         this.date = date;
     }
 
+    public LocalDateTime getDate(){
+        return this.date;
+    }
+
+    public double getTotal(){
+        return this.total;
+    }
+
     public void addAdjustment(Adjustment adjustment){
         total += adjustment.getValue();
         adjustments.add(adjustment);
     }
 
+    // TODO make domain service for editing Journals that exist in accounthistory ("EditJournalInAccount", "RemoveJournalInAccount")
     public void removeAdjustment(Adjustment adjustment){
         if (!this.adjustments.contains(adjustment)){
             throw new NoSuchElementException("Adjustment not found in journal: '" + adjustment + "'.");
