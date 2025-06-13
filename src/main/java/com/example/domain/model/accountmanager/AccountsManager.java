@@ -11,17 +11,40 @@ public class AccountsManager {
     private final UUID accountsManagerId;
     private String description;
     private final LocalDate initialisation_date;
-    private LocalDate period_start;
-    private Period period_length;
+    private final AccountingPeriod accountingPeriod;
     private final HashMap<UUID, Account> accounts;
     private ChartOfAccountsTree chartOfAccounts;
+
+    private static class AccountingPeriod {
+        private final LocalDate start;
+        private final Period length;
+
+        public AccountingPeriod(LocalDate period_start, Period period_length){
+            this.start = period_start;
+            this.length = period_length;
+        }
+
+        public Period getLength() {
+            return length;
+        }
+
+        public LocalDate getStart() {
+            return start;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (!(o instanceof AccountingPeriod accountingPeriod)) return false;
+            return this.getLength() == accountingPeriod.getLength() &&  this.getStart() == accountingPeriod.getStart();
+        }
+    }
 
     public AccountsManager(String description, LocalDate period_start, Period period_length, ChartOfAccountsTree chartOfAccounts){
         this.accountsManagerId = UUID.randomUUID(); // generate a UUID for the Object
         this.description = description;
         this.initialisation_date = LocalDate.now();
-        this.period_start = period_start;
-        this.period_length = period_length;
+        this.accountingPeriod = new AccountingPeriod(period_start, period_length);
         this.accounts = new HashMap<>();
         this.chartOfAccounts = chartOfAccounts;
 
@@ -30,11 +53,11 @@ public class AccountsManager {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AccountsManager accounts_manager)) return false;
-        return this.getId() == accounts_manager.getId() &&
-                this.getPeriodLength() == accounts_manager.getPeriodLength() &&
-                this.getPeriodStart() == accounts_manager.getPeriodStart() &&
-                Objects.equals(this.getDescription(), accounts_manager.getDescription());
+        if (!(o instanceof AccountsManager accountsManager)) return false;
+        return this.getId() == accountsManager.getId() &&
+                this.accountingPeriod.getLength() == accountsManager.accountingPeriod.getLength() &&
+                this.accountingPeriod.getStart() == accountsManager.accountingPeriod.getStart() &&
+                Objects.equals(this.getDescription(), accountsManager.getDescription());
     }
 
     // TODO: hashcode override
@@ -51,12 +74,8 @@ public class AccountsManager {
         return this.initialisation_date;
     }
 
-    public LocalDate getPeriodStart(){
-        return this.period_start;
-    }
-
-    public Period getPeriodLength() {
-        return this.period_length;
+    public AccountingPeriod getAccountingPeriod(){
+        return this.accountingPeriod;
     }
 
     public HashMap<UUID, Account> getAccounts(){
