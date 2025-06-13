@@ -67,14 +67,6 @@ public class AccountsManager {
         return this.chartOfAccounts;
     }
 
-    public void changePeriodStart(LocalDate new_date){
-        this.period_start = new_date;
-    }
-
-    public void changePeriodLength(Period new_period_length){
-        this.period_length = new_period_length;
-    }
-
     public void changeDescription(String newDescription){
         this.description = newDescription;
     }
