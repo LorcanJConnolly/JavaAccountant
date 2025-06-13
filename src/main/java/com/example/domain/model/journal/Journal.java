@@ -13,28 +13,12 @@ public class Journal {
     private double total;
     private final LocalDateTime date;
 
-    public class Adjustment {
-        private final String description;
-        private final int value;
-
-        public Adjustment(String description, int value){
-            this.description = description;
-            this.value = value;
-        }
-
-        public String getDescription(){
-            return this.description;
-        }
-
-        public int getValue(){
-            return this.value;
-        }
-
+    public record Adjustment(String description, int value) {
         @Override
-        public String toString(){
-            return "Adjustment(" + this.description + ", " + this.value + ")";
+            public String toString() {
+                return "Adjustment(" + this.description + ", " + this.value + ")";
+            }
         }
-    }
 
     public Journal(String description, ArrayList<Adjustment> adjustments, LocalDateTime date){
         this.journalID = UUID.randomUUID();
@@ -58,17 +42,23 @@ public class Journal {
         return this.total;
     }
 
-    public void addAdjustment(Adjustment adjustment){
-        total += adjustment.getValue();
-        adjustments.add(adjustment);
+    public ArrayList<Adjustment> getAdjustments(){
+        // TODO: return copy and overwrite?
+        return this.adjustments;
+    }
+
+    public void addAdjustment(String description, int value){
+        total += value;
+        adjustments.add(new Adjustment(description, value));
     }
 
     // TODO make domain service for editing Journals that exist in accounthistory ("EditJournalInAccount", "RemoveJournalInAccount")
-    public void removeAdjustment(Adjustment adjustment){
-        if (!this.adjustments.contains(adjustment)){
-            throw new NoSuchElementException("Adjustment not found in journal: '" + adjustment + "'.");
+    public void removeAdjustment(String description, int value){
+        Adjustment proxy_adjustment = new Adjustment(description, value);
+        if (!this.adjustments.contains(proxy_adjustment)){
+            throw new NoSuchElementException("Adjustment not found in journal: '" + proxy_adjustment + "'.");
         }
-        total -= adjustment.getValue();
-        adjustments.remove(adjustment);
+        total -= value;
+        adjustments.remove(proxy_adjustment);
     }
 }
