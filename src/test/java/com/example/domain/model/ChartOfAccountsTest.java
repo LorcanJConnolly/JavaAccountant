@@ -1,4 +1,4 @@
-package com.example;
+package com.example.domain.model;
 
 import com.example.domain.model.accountmanager.ChartOfAccountsTree;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,6 @@
-package com.example;
+package com.example.domain.model;
 
 import junit.framework.TestCase;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
 
 public class AccountTest extends TestCase {
     public void testGetValueAt(){
