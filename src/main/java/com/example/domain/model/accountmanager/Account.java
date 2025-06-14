@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Account {
     private final UUID accountId;
-    private final ArrayList<String> descriptors;
-    private final LocalDateTime initialisationDate;
+    private final ArrayList<String> descriptors;    // TODO: possibly set?
+    private final LocalDateTime initialisationDate;  // TODO: do we need an initialisation date if that date *should* be the lowest date in the accounts history*
     private AccountCategory category;
     private final String chartOfAccountsNodeCategory;   // TODO: could this be gotten from the COA node category
     private final AccountHistory history; // HashMap<LocalDateTime, HashMap<Integer, ArrayList<Journal>>>
@@ -91,4 +91,7 @@ public class Account {
             this.history.removeAdjustment(date, adjustment, valueToAccountBalance);
         }
     }
+
+    // TODO: equals for descriptors and UUID, convert to set
+    // TODO: refactor - descriptors become identifiers, we can drop accountId
 }

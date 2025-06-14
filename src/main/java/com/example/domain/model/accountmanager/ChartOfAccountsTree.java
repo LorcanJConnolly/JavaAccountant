@@ -185,7 +185,7 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         this.nodes = new HashSet<>();
     }
 
-    public ChartOfAccountsTree(ChartOfAccountsTree json){
+    public ChartOfAccountsTree(ChartOfAccountsTree tree){
         // init COA from an existing COA (copy) - possibly for when the root is wrong and we need to construct a new one
         this.ChartOfAccountsId = UUID.randomUUID();
         this.root = null;
@@ -212,6 +212,8 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         }
         return null;
     }
+
+    // TODO: COA add and remove node
 
     @Override
     public Iterator<Node> iterator() {

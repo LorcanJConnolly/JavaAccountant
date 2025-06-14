@@ -2,10 +2,7 @@ package com.example.domain.model.accountmanager;
 
 import java.time.Period;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class AccountsManager {
     private final UUID accountsManagerId;
@@ -78,6 +75,7 @@ public class AccountsManager {
         return this.accountingPeriod;
     }
 
+    // TODO: getAccounts by descriptors
     public HashMap<UUID, Account> getAccounts(){
         return new HashMap<>(this.accounts);
     }
@@ -94,7 +92,28 @@ public class AccountsManager {
         this.chartOfAccounts = newChartOfAccounts;
     }
 
-    public void addAccount(Account account){
+    public void addNewAccount(ArrayList<String> descriptors, AccountCategory category, String chartOfAccountsNodeCategory){
+        Account account = new Account(descriptors, category, chartOfAccountsNodeCategory);
+
+        if (findAccountById(account.getAccountId()) != null){
+            throw new IllegalArgumentException("Account already exists in AccountsManager.");
+        }
+
+        if (this.chartOfAccounts.findNodeByCategory(account.getChartOfAccountsNodeCategory()) == null){
+            throw new IllegalArgumentException("Account has no index in chart of accounts.");
+        }
+        // TODO: check if account's category is an AccountCategory
+        // TODO: string account category and then we make the object here which checks if it is an AccountCategory
+        // TODO: both wrong, when we add a new account we should create its category from the COA root - done after so node exists in COA
+
+
+        this.accounts.put(account.getAccountId(), account);
+    }
+
+    // TODO would we access this account through its account manager (existing account by definition must have an account manager) in the function signature?
+    public void addExistingAccount(Account account){
+        // TODO, check the account's category fits into the COA
+
         if (findAccountById(account.getAccountId()) != null){
             throw new IllegalArgumentException("Account already exists in AccountsManager.");
         }
@@ -106,14 +125,14 @@ public class AccountsManager {
         this.accounts.put(account.getAccountId(), account);
     }
 
-    public void deleteAccount(Account account){
-        Account foundAccount = findAccountById(account.getAccountId());
+    public void deleteAccount(UUID accountId){
+        Account foundAccount = findAccountById(accountId);
 
         if (foundAccount == null) {
             throw new NoSuchElementException("Account does not exist in AccountManager.");
         }
 
-        this.accounts.remove(account.getAccountId(), account);
+        this.accounts.remove(accountId, foundAccount);
     }
     public Account findAccountById(UUID accountId){
         return this.accounts.get(accountId);
