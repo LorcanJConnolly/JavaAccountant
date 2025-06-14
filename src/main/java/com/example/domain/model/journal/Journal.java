@@ -20,17 +20,10 @@ public class Journal {
             }
         }
 
-    public Journal(String description, ArrayList<Adjustment> adjustments, LocalDateTime date){
+    public Journal(String description, LocalDateTime date){
         this.journalID = UUID.randomUUID();
         this.description = description;
-        this.adjustments = adjustments;
-        this.date = date;
-    }
-
-    public Journal(String description, Adjustment adjustment, LocalDateTime date){
-        this.journalID = UUID.randomUUID();
-        this.description = description;
-        this.adjustments = new ArrayList<>(Collections.singletonList(adjustment));
+        this.adjustments = new ArrayList<>();
         this.date = date;
     }
 
