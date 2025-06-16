@@ -193,8 +193,8 @@ public class ChartOfAccountsTest {
         root.deleteNodeAndBranch();
         assertTrue(COA.showNodes().isEmpty());
         assertNull(COA.getRoot().getCategory(), "Expected root attributes to be null");
-        assertNull(COA.getRoot().getCOACode(), "Expected root attributes to be null");
-        assertNull(COA.getRoot().getCOACode(), "Expected root attributes to be null");
+        assertNull(COA.getRoot().getCode(), "Expected root attributes to be null");
+        assertNull(COA.getRoot().getCode(), "Expected root attributes to be null");
         assertNull(COA.getRoot().getChildren(), "Expected root attributes to be null");
     }
 }
