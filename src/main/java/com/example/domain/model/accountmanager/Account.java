@@ -2,42 +2,34 @@ package com.example.domain.model.accountmanager;
 
 import com.example.domain.model.journal.Journal;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Account {
-    private final UUID accountId;
-    private final ArrayList<String> descriptors;    // TODO: possibly set?
+    private final HashSet<String> identifiers;
     private final LocalDateTime initialisationDate;  // TODO: do we need an initialisation date if that date *should* be the lowest date in the accounts history*
     private AccountCategory category;
-    private final String chartOfAccountsNodeCategory;   // TODO: could this be gotten from the COA node category
+    private final ChartOfAccountsTree.Node chartOfAccountsNode;
     private final AccountHistory history; // HashMap<LocalDateTime, HashMap<Integer, ArrayList<Journal>>>
 
-    public Account(ArrayList<String> descriptors, AccountCategory category, String chartOfAccountsNodeCategory) {
-        this.accountId = UUID.randomUUID();
-        this.descriptors = descriptors;
+    public Account(HashSet<String> identifiers, AccountCategory category, ChartOfAccountsTree.Node chartOfAccountsNode) {
+        this.identifiers = identifiers;
         this.initialisationDate = LocalDateTime.now();
         this.category = category;
-        this.chartOfAccountsNodeCategory = chartOfAccountsNodeCategory;
+        this.chartOfAccountsNode = chartOfAccountsNode;
         this.history = new AccountHistory(this.initialisationDate, 0);
     }
 
-    public Account(ArrayList<String> descriptors, AccountCategory category, String chartOfAccountsNodeCategory, LocalDateTime initialisationDate, double initialValue) {
-        this.accountId = UUID.randomUUID();
-        this.descriptors = descriptors;
+    public Account(HashSet<String> descriptors, AccountCategory category, ChartOfAccountsTree.Node chartOfAccountsNode, LocalDateTime initialisationDate, double initialValue) {
+        this.identifiers = descriptors;
         this.initialisationDate = initialisationDate;
         this.category = category;
-        this.chartOfAccountsNodeCategory = chartOfAccountsNodeCategory;
+        this.chartOfAccountsNode = chartOfAccountsNode;
         this.history = new AccountHistory(initialisationDate, initialValue);
     }
 
-    public UUID getAccountId(){
-        return this.accountId;
-    }
-
-    public ArrayList<String> getDescriptors(){
-        return new ArrayList<>(descriptors);
+    public HashSet<String> getIdentifiers(){
+        return new HashSet<>(identifiers);
     }
 
     public AccountCategory getCategory(){
@@ -48,8 +40,8 @@ public class Account {
         return this.initialisationDate;
     }
 
-    public String getChartOfAccountsNodeCategory(){
-        return this.chartOfAccountsNodeCategory;
+    public ChartOfAccountsTree.Node getChartOfAccountsNode(){
+        return this.chartOfAccountsNode;
     }
 
     public AccountHistory getHistory(){
@@ -92,6 +84,10 @@ public class Account {
         }
     }
 
-    // TODO: equals for descriptors and UUID, convert to set
-    // TODO: refactor - descriptors become identifiers, we can drop accountId
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account account)) return false;
+        return this.identifiers == account.identifiers;
+    }
 }
