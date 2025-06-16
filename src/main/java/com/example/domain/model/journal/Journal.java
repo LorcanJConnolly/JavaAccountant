@@ -13,6 +13,8 @@ public class Journal {
     private double total;
     private final LocalDateTime date;
 
+    // TODO private?
+    // TODO adjustments need to go to an account
     public record Adjustment(String description, int value) {
         @Override
             public String toString() {
