@@ -1,5 +1,6 @@
 package com.example.domain.services;
 
+import com.example.domain.model.AdjustmentTest;
 import com.example.domain.model.accountmanager.AccountCategory;
 import com.example.domain.model.accountmanager.AccountsManager;
 import com.example.domain.model.accountmanager.ChartOfAccountsTree;
@@ -10,9 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.HashSet;
 
 public class JournalPostingServiceTest {
 
@@ -29,10 +28,13 @@ public class JournalPostingServiceTest {
         Period periodLength3 = Period.ofMonths(12);
 
         // COAs
-        ChartOfAccountsTree coa1 = new ChartOfAccountsTree("assets", "0001");
-        ChartOfAccountsTree coa2 = new ChartOfAccountsTree("liabilities", "0001");
-        ChartOfAccountsTree coa3 = new ChartOfAccountsTree("equity", "0001");
-        // TODO: COA add and remove node
+        ChartOfAccountsTree coa1 = new ChartOfAccountsTree("assets", "0001", "chart of accounts 1");
+        ChartOfAccountsTree coa2 = new ChartOfAccountsTree("liabilities", "0001", "chart of accounts 2");
+        ChartOfAccountsTree coa3 = new ChartOfAccountsTree("equity", "0001", "chart of accounts 3");
+        // TODO: COA add and remove node#
+        coa1.addNode(coa1.getRoot(), "even more assets", "0002");
+        coa1.addNode(coa1.getRoot(), "even more liabilities", "0002");
+        coa1.addNode(coa1.getRoot(), "even more equity", "0002");
 
 
         // AccountManagers
@@ -42,27 +44,21 @@ public class JournalPostingServiceTest {
 
         // Add Accounts
         //descriptors
-        ArrayList<String> descriptors1 = new ArrayList<>();
-        descriptors1.add("account description 1");
-        descriptors1.add("account code 1");
+        HashSet<String> identifiers1 = new HashSet<>();
+        identifiers1.add("account description 1");
+        identifiers1.add("account code 1");
 
-        ArrayList<String> descriptors2 = new ArrayList<>();
-        descriptors2.add("account description 2");
-        descriptors2.add("account code 2");
+        HashSet<String> identifiers2 = new HashSet<>();
+        identifiers2.add("account description 2");
+        identifiers2.add("account code 2");
 
-        ArrayList<String> descriptors3 = new ArrayList<>();
-        descriptors2.add("account description 3");
-        descriptors2.add("account code 3");
+        HashSet<String> identifiers3 = new HashSet<>();
+        identifiers3.add("account description 3");
+        identifiers3.add("account code 3");
 
-        // (temp) Category TODO: REMOVE
-        AccountCategory accountCategory1 = AccountCategory.ASSET;
-        AccountCategory accountCategory2 = AccountCategory.LIABILITY;
-        AccountCategory accountCategory3 = AccountCategory.EQUITY;
-
-
-        accountsManager1.addNewAccount(descriptors1, accountCategory1, "assets");
-        accountsManager1.addNewAccount(descriptors2, accountCategory2, "liabilities");
-        accountsManager1.addNewAccount(descriptors3, accountCategory3, "equity");
+        accountsManager1.addAccount(identifiers1, accountsManager1.getChartOfAccounts().findNode("even more assets", "0002"));
+        accountsManager1.addAccount(identifiers2, accountsManager2.getChartOfAccounts().findNode("even more liabilities", "0002"));
+        accountsManager1.addAccount(identifiers3, accountsManager3.getChartOfAccounts().findNode("even more equity", "0002"));
     }
 
     @BeforeEach
@@ -71,7 +67,6 @@ public class JournalPostingServiceTest {
         LocalDateTime sameDateTime1 = LocalDateTime.of(1, 1, 1, 1, 1);
         LocalDateTime sameDateTime2 = LocalDateTime.of(1, 1, 1, 1, 1);
         LocalDateTime sameDateTime3 = LocalDateTime.of(1, 1, 1, 1, 1);
-
         LocalDateTime uniqueDateTime1 = LocalDateTime.of(1, 1, 1, 1, 9);
         LocalDateTime uniqueDateTime2 = LocalDateTime.of(1, 1, 1, 9, 1);
         LocalDateTime uniqueDateTime3 = LocalDateTime.of(1, 1, 9, 1, 1);
@@ -87,12 +82,38 @@ public class JournalPostingServiceTest {
         Journal uniqueJournal4 = new Journal("unique journal 1", uniqueDateTime4);
         Journal uniqueJournal5 = new Journal("unique journal 1", uniqueDateTime5);
 
+        // Adjustments
+        sameJournal1.addAdjustment("adjustment 1", 100);
+        sameJournal1.addAdjustment("adjustment 2", -100);
+        sameJournal2.addAdjustment("adjustment 1", 100);
+        sameJournal2.addAdjustment("adjustment 2", -100);
+        sameJournal3.addAdjustment("adjustment 1", 100);
+        sameJournal3.addAdjustment("adjustment 2", -100);
+
+        uniqueJournal1.addAdjustment("adjustment 1.1", 100);
+        uniqueJournal1.addAdjustment("adjustment 1.2", -100);
+        uniqueJournal2.addAdjustment("adjustment 2.1", 100);
+        uniqueJournal2.addAdjustment("adjustment 2.2", -100);
+        uniqueJournal3.addAdjustment("adjustment 3.1", 100);
+        uniqueJournal3.addAdjustment("adjustment 3.2", -100);
+        uniqueJournal4.addAdjustment("adjustment 4.1", 100);
+        uniqueJournal4.addAdjustment("adjustment 4.2", -100);
+        uniqueJournal5.addAdjustment("adjustment 5.1", 100);
+        uniqueJournal5.addAdjustment("adjustment 5.2", -100);
+
     }
 
+    // Account Managers
     AccountsManager accountsManager1;
     AccountsManager accountsManager2;
     AccountsManager accountsManager3;
 
+    // Accounts
+    HashSet<String> identifiers1;
+    HashSet<String> identifiers2;
+    HashSet<String> identifiers3;
+
+    // Journals
     Journal sameJournal1;
     Journal sameJournal2;
     Journal sameJournal3;
@@ -105,6 +126,17 @@ public class JournalPostingServiceTest {
     @Test
     void testPostJournalToAccounts(){
         JournalPostingService journalPostingService = new JournalPostingService();
-        journalPostingService.PostJournalToAccounts(accountsManager1, sameJournal1);
+        // TODO Jounral does not go to accounts, its adjustments do > we just give the journal to the account manager and unpack it
+        journalPostingService.PostJournalToAccounts(accountsManager1, identifiers1, sameJournal1);
+        journalPostingService.PostJournalToAccounts(accountsManager1, identifiers1, sameJournal2);
+        journalPostingService.PostJournalToAccounts(accountsManager1, identifiers1, sameJournal3);
+    }
+
+    @Test
+    void testPostUnbalancedJournal(){
+        sameJournal1.removeAdjustment("adjustment 1", 100);
+        JournalPostingService journalPostingService = new JournalPostingService();
+        journalPostingService.PostJournalToAccounts(accountsManager1, identifiers1, sameJournal1);
+
     }
 }
