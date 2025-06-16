@@ -1,6 +1,6 @@
 package com.example.domain.model;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class AdjustmentTest extends TestCase {
+public class AdjustmentTest {
 }
