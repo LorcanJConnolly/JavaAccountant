@@ -9,7 +9,7 @@ public class AccountsManager {
     private String description;
     private final LocalDate initialisation_date;
     private final AccountingPeriod accountingPeriod;
-    private final HashMap<UUID, Account> accounts;
+    private final HashMap<HashSet<String>, Account> accounts;
     private ChartOfAccountsTree chartOfAccounts;
 
     private static class AccountingPeriod {
@@ -71,12 +71,15 @@ public class AccountsManager {
         return this.initialisation_date;
     }
 
-    public AccountingPeriod getAccountingPeriod(){
-        return this.accountingPeriod;
+    public LocalDate getPeriodStart(){
+        return this.accountingPeriod.getStart();
     }
 
-    // TODO: getAccounts by descriptors
-    public HashMap<UUID, Account> getAccounts(){
+    public Period getPeriodLength(){
+        return this.accountingPeriod.getLength();
+    }
+
+    public HashMap<HashSet<String>, Account> getAccounts(){
         return new HashMap<>(this.accounts);
     }
 
@@ -92,49 +95,31 @@ public class AccountsManager {
         this.chartOfAccounts = newChartOfAccounts;
     }
 
-    public void addNewAccount(ArrayList<String> descriptors, AccountCategory category, String chartOfAccountsNodeCategory){
-        Account account = new Account(descriptors, category, chartOfAccountsNodeCategory);
+    public void addAccount(HashSet<String> identifiers, ChartOfAccountsTree.Node chartOfAccountsNode){
+        AccountCategory category = AccountCategory.fromString(this.chartOfAccounts.getRoot().getCategory());
+        Account account = new Account(identifiers, category, chartOfAccountsNode);
 
-        if (findAccountById(account.getAccountId()) != null){
+        if (findAccountByIdentifiers(account.getIdentifiers()) != null){
             throw new IllegalArgumentException("Account already exists in AccountsManager.");
         }
 
-        if (this.chartOfAccounts.findNodeByCategory(account.getChartOfAccountsNodeCategory()) == null){
-            throw new IllegalArgumentException("Account has no index in chart of accounts.");
-        }
-        // TODO: check if account's category is an AccountCategory
-        // TODO: string account category and then we make the object here which checks if it is an AccountCategory
-        // TODO: both wrong, when we add a new account we should create its category from the COA root - done after so node exists in COA
-
-
-        this.accounts.put(account.getAccountId(), account);
-    }
-
-    // TODO would we access this account through its account manager (existing account by definition must have an account manager) in the function signature?
-    public void addExistingAccount(Account account){
-        // TODO, check the account's category fits into the COA
-
-        if (findAccountById(account.getAccountId()) != null){
-            throw new IllegalArgumentException("Account already exists in AccountsManager.");
-        }
-
-        if (this.chartOfAccounts.findNodeByCategory(account.getChartOfAccountsNodeCategory()) == null){
+        if (this.chartOfAccounts.findNode(account.getChartOfAccountsNode().getCategory(), account.getChartOfAccountsNode().getCode()) == null){
             throw new IllegalArgumentException("Account has no index in chart of accounts.");
         }
 
-        this.accounts.put(account.getAccountId(), account);
+        this.accounts.put(account.getIdentifiers(), account);
     }
 
-    public void deleteAccount(UUID accountId){
-        Account foundAccount = findAccountById(accountId);
+    public void deleteAccount(HashSet<String> accountIdentifiers){
+        Account foundAccount = findAccountByIdentifiers(accountIdentifiers);
 
         if (foundAccount == null) {
             throw new NoSuchElementException("Account does not exist in AccountManager.");
         }
 
-        this.accounts.remove(accountId, foundAccount);
+        this.accounts.remove(accountIdentifiers, foundAccount);
     }
-    public Account findAccountById(UUID accountId){
-        return this.accounts.get(accountId);
+    public Account findAccountByIdentifiers(HashSet<String> accountIdentifiers){
+        return this.accounts.get(accountIdentifiers);
     }
 }
