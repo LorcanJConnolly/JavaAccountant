@@ -1,2 +1,1 @@
-We need to do TODO's in Account and AccountManager and then test JournalPostingService
-TODO in COA too
+TODO adjustment goes to the accounts
