@@ -1,6 +1,5 @@
 package com.example.domain.model.accountmanager;
 
-import java.io.File;
 import java.util.*;
 
 public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
@@ -14,31 +13,30 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
 
     public class Node implements Iterable<Node> {
         private String category;
-        private String COA_code;
+        private String code;
         private Node parent;
-        private ArrayList<Node> children;
+        private final ArrayList<Node> children;
 
-        public Node(String value, String COA_code) {
-            if (!helperStringIsPositiveInteger(COA_code)){
-                throw new IllegalArgumentException("COA Code '" + COA_code + "' is not a positive integer.");
+        public Node(String category, String code) {
+            if (category == null  || code == null){
+                throw new IllegalArgumentException("Node initialised with null attributes.");
+            }
+            if (!helperStringIsPositiveInteger(code)){
+                throw new IllegalArgumentException("COA Code '" + code + "' is not a positive integer.");
 
             }
-            this.category = value;
-            this.COA_code = COA_code;
+            this.category = category;
+            this.code = code;
             this.parent = null;
             this.children = new ArrayList<>();
-        }
-
-        public ChartOfAccountsTree getChartOfAccounts(){
-            return ChartOfAccountsTree.this;
         }
 
         public String getCategory(){
             return this.category;
         }
 
-        public String getCOACode(){
-            return this.COA_code;
+        public String getCode(){
+            return this.code;
         }
 
         public Node getParent(){
@@ -59,45 +57,16 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         }
 
         public void editNode(String category, String COA_code){
-            if (this == ChartOfAccountsTree.this.getRoot() ){
-
-                throw new UnsupportedOperationException("Can't edit root node.");
-            }
-            Node node_shallow_copy = new Node(category, COA_code);
-            if (helperCheckExists(node_shallow_copy)) {
-                throw new IllegalArgumentException("The node '" + node_shallow_copy + "' already exists in the chart of accounts.");
-            }
-            node_shallow_copy.children = new ArrayList<>(this.children);
-            node_shallow_copy.parent = this.parent;
             this.category = category;
-            this.COA_code = COA_code;
+            this.code = COA_code;
         }
 
         public void addChild(Node child){
-            if (child == null){
-                // For warnings.
-                throw new IllegalArgumentException("Node cannot be null.");
-            }
-            if (helperCheckExists(child)) {
-                throw new IllegalArgumentException("The value '" + child + "' already exists in the chart of accounts.");
-            }
             this.children.add(child);
             child.parent = this;
             ChartOfAccountsTree.this.nodes.add(child);
         }
 
-        public void addParent(Node parent_node){
-            if (this == ChartOfAccountsTree.this.getRoot() ){
-                throw new UnsupportedOperationException("Can't add parent to root node.");
-            }
-        }
-
-        /**
-         *  The Chart of Accounts is represented by a Tree.
-         *  Each branch represents an account category, and each node of this branch represents further detail of this category.
-         *  The branches and nodes represent a hierarchical relationship.
-         *  When we delete a node, we will be deleting the entire branch from the Chart of Accounts.
-         */
         public void deleteNodeAndBranch(){
             if (!this.children.isEmpty()){
                 List<Node> childrenCopy = new ArrayList<>(this.children);
@@ -116,19 +85,18 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         @Override
         public boolean equals(Object o){
             if (this == o) return true;
-            if (!(o instanceof Node)) return false;
-            Node node = (Node) o;
-            return this.category.equals(node.category) && this.COA_code.equals(node.COA_code);
+            if (!(o instanceof Node node)) return false;
+            return this.category.equals(node.category) && this.code.equals(node.code);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(this.category, this.COA_code);
+            return Objects.hash(this.category, this.code);
         }
 
         @Override
         public String toString(){
-            return "(" + this.category + ", " + this.COA_code + ")";
+            return "(" + this.category + ", " + this.code + ")";
         }
 
         @Override
@@ -159,37 +127,28 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
             }
         }
 
-        private boolean helperCheckExists(Node node){
-            return ChartOfAccountsTree.this.showNodes().contains(node);
-        }
-
         private boolean helperStringIsPositiveInteger(String str){
             return str.matches("\\d+");
         }
     }
 
-    public ChartOfAccountsTree(String root_value, String root_COA_code){
+    public ChartOfAccountsTree(String root_value, String root_COA_code, String description){
         if (ALLOWED_ROOT_VALUES.contains(root_value)){
             throw new IllegalArgumentException("Invalid root value: " + root_value + ". Root value must be one of the following: " + ALLOWED_ROOT_VALUES);
         }
         this.ChartOfAccountsId = UUID.randomUUID();
+        this.description = description;
         this.root = new Node(root_value, root_COA_code);
         this.nodes = new HashSet<>();
         this.nodes.add(this.root);
     }
 
-    public ChartOfAccountsTree(File json){
-        // init COA from json file
-        this.ChartOfAccountsId = UUID.randomUUID();
-        this.root = null;
-        this.nodes = new HashSet<>();
+    public UUID getChartOfAccountsId(){
+        return this.ChartOfAccountsId;
     }
 
-    public ChartOfAccountsTree(ChartOfAccountsTree tree){
-        // init COA from an existing COA (copy) - possibly for when the root is wrong and we need to construct a new one
-        this.ChartOfAccountsId = UUID.randomUUID();
-        this.root = null;
-        this.nodes = new HashSet<>();
+    public String getDescription(){
+        return this.description;
     }
 
     public Node getRoot(){
@@ -204,16 +163,50 @@ public class ChartOfAccountsTree implements Iterable<ChartOfAccountsTree.Node> {
         return new HashSet<>(this.nodes);
     }
 
-    public Node findNodeByCategory(String category){
+    public void newDescription(String description){
+        this.description = description;
+    }
+
+    public Node findNode(String category, String code){
         for (Node node: this.showNodes()){
-            if (node.category.equals(category)){
+            if (node.category.equals(category) && node.code.equals(code)){
                 return node;
             }
         }
         return null;
     }
 
-    // TODO: COA add and remove node
+    public void addNode(Node parent, String category, String COA_code){
+        if (parent == null){
+            throw new IllegalArgumentException("Parent node cannot be null. Root node is a property of the chart of accounts tree and cannot be altered.");
+        }
+        Node node = new Node(category, COA_code);
+        if (this.nodes.contains(node)){
+            throw new IllegalArgumentException("The node '" + node + "' already exists in the chart of accounts tree.");
+        }
+        parent.addChild(node);
+    }
+
+    public void removeNode(Node node){
+        if (this.root == node){
+            throw new IllegalArgumentException("Node cannot be root. Root node is a property of the chart of accounts tree and cannot be altered.");
+        }
+        if (!this.nodes.contains(node)){
+            throw new IllegalArgumentException("The node '" + node + "' does not exist in the chart of accounts tree.");
+        }
+        node.deleteNodeAndBranch();
+    }
+
+    public void editNode(Node node){
+        if (this.root == node){
+            throw new IllegalArgumentException("Node cannot be root. Root node is a property of the chart of accounts tree and cannot be altered.");
+        }
+        if (!this.nodes.contains(node)){
+            throw new IllegalArgumentException("The node '" + node + "' does not exist in the chart of accounts tree.");
+        }
+        this.editNode(node);
+
+    }
 
     @Override
     public Iterator<Node> iterator() {
